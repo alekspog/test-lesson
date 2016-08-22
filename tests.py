@@ -75,7 +75,7 @@ class LessonEdit(unittest.TestCase):
             textfield.send_keys(Keys.BACK_SPACE)
 
 
-    def te_correct_answer(self):
+    def test_correct_answer(self):
         self.open_lesson_to_edit()
         print ("Testing correct option")
         driver = self.driver
@@ -132,7 +132,7 @@ class LessonEdit(unittest.TestCase):
 
         self.restore_textfield()
 
-    def tes_too_many_options(self):
+    def test_too_many_options(self):
         self.open_lesson_to_edit()
         print ("Testing quiz options. Too many options warning.")
         driver = self.driver
@@ -160,7 +160,7 @@ class LessonEdit(unittest.TestCase):
             self.fail("Error is not displayed")
 
 
-    def tes_no_options(self):
+    def test_no_options(self):
         self.open_lesson_to_edit()
         print("Testing quiz options. No options selected.")
 
