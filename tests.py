@@ -22,23 +22,10 @@ class LessonEdit(unittest.TestCase):
     def open_lesson_to_edit(self):
         driver = self.driver
         driver.get(url)
-        print ("Opening lesson to edit")
-        try:
-            elem = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.LINK_TEXT, u'Пропустить'))
-            )
-        except:
-            TimeoutException()
+        driver.implicitly_wait(10)
 
+        elem = driver.find_element_by_xpath('//*[@class = "introjs-button introjs-skipbutton"]')
         elem.click()
-
-
-        try:
-             WebDriverWait(driver, 10).until(
-                EC.alert_is_present()
-            )
-        except:
-            TimeoutException()
 
         alert = driver.switch_to.alert
         alert.accept()
@@ -48,52 +35,29 @@ class LessonEdit(unittest.TestCase):
         login = driver.find_element_by_xpath('//*[@class = "navbar"]/div[2]/a[1]')
         login.click()
 
-        try:
-            login_field = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, 'id_login'))
-            )
-        except:
-            TimeoutException()
-
+        login_field = driver.find_element_by_id('id_login')
         login_field.send_keys(username)
-        password_field = driver.find_element_by_id("id_password")
+        password_field = driver.find_element_by_id('id_password')
         password_field.send_keys(password)
         password_field.send_keys(Keys.RETURN)
 
-        try:
-            edit = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@title="Редактировать"]'))
-            )
-        except:
-            TimeoutException()
 
+        edit = driver.find_element_by_xpath('//*[@class = "lesson-header__buttons"]/a[1]')
         edit.click()
 
     def restore_lesson(self):
         driver = self.driver
 
         driver.execute_script("window.scrollTo(0,  0)")  # hardcoded
-        try:
-            elem = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@title="Редактировать"]'))
-            )
-        except:
-            TimeoutException()
+        edit = driver.find_element_by_xpath('//*[@class = "lesson-header__buttons"]/a[1]')
+        edit.click()
 
-        elem.click()
 
-        try:
-            checkbox1 = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '(//*[@class = "s-checkbox__border"])[5]'))
-            )
-            checkbox2 = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '(//*[@class = "s-checkbox__border"])[3]'))
-            )
-        except:
-            TimeoutException()
+        checkbox1 = driver.find_element_by_xpath('(//*[@class = "s-checkbox__border"])[5]')
+        checkbox2 = driver.find_element_by_xpath('(//*[@class = "s-checkbox__border"])[3]')
 
         save = driver.find_element_by_xpath('//*[@class="lesson-editor__complete-actions"]/button[1]')
-        time.sleep(1)
+
         driver.execute_script("window.scrollTo(0,  810)")           #hardcoded
 
         checkbox1.click()
@@ -105,48 +69,27 @@ class LessonEdit(unittest.TestCase):
         print ("Testing correct option")
         driver = self.driver
 
-        try:
-            checkbox1 = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '(//*[@class = "s-checkbox__border"])[5]'))
-            )
-            checkbox2 = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '(//*[@class = "s-checkbox__border"])[3]'))
-            )
-        except:
-            TimeoutException()
+        checkbox1 = driver.find_element_by_xpath('(//*[@class = "s-checkbox__border"])[5]')
+        checkbox2 = driver.find_element_by_xpath('(//*[@class = "s-checkbox__border"])[3]')
 
         save = driver.find_element_by_xpath('//*[@class="lesson-editor__complete-actions"]/button[1]')
-        time.sleep(1)
+
         driver.execute_script("window.scrollTo(0,  810)")           #hardcoded
 
         checkbox1.click()
         checkbox2.click()
         save.click()
-        time.sleep(1)
-        try:
-            start = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '(//*[@class = "attempt__actions"])/button[1]'))
-            )
-        finally:
 
-            TimeoutException()
+        start = driver.find_element_by_xpath('(//*[@class = "attempt__actions"])/button[1]')
 
         start.click()
         time.sleep(1)
         driver.execute_script("window.scrollTo(0,  315)")  # hardcoded
 
-        option = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '(//*[@class = "s-radio__border"])[1]'))
-            )
+        option = driver.find_element_by_xpath('(//*[@class = "s-radio__border"])[1]')
 
         option.click()
-
-        try:
-            submit = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@class = "submit-submission"]'))
-            )
-        finally:
-            TimeoutException()
+        submit = driver.find_element_by_xpath('//*[@class = "submit-submission"]')
 
         submit.click()
         try:
@@ -160,43 +103,27 @@ class LessonEdit(unittest.TestCase):
 
     def test_edit_text(self):
         self.open_lesson_to_edit()
-        print("Testing test editing")
+        print("Testing text editing")
 
         driver = self.driver
 
-        try:
-            elem = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@class="wysihtml5-textarea step-text-wrapper wysi-textarea__body theory"]'))
-            )
-        except:
-            TimeoutException()
+        textfield = driver.find_element_by_xpath('//*[@class="wysihtml5-textarea step-text-wrapper wysi-textarea__body theory"]')
 
-        elem.send_keys("Answer below")
+        textfield.send_keys("Answer below")
 
-        assert "below" in elem.text
+        assert "below" in textfield.text
 
         elem = driver.find_element_by_xpath('//*[@class="lesson-editor__complete-actions"]/button[1]')
         elem.click()
 
-        try:
-            elem = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@class="ember-view step-text-wrapper"]'))
-            )
-        except:
-            TimeoutException()
-
-        assert "below" in elem.text
+        textfield = driver.find_element_by_xpath('//*[@class="ember-view step-text-wrapper"]')
+        assert "below" in textfield.text
 
     def test_too_many_options(self):
         self.open_lesson_to_edit()
         print ("Testing quiz options. Too many options warning.")
         driver = self.driver
-        try:
-            checkbox = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '(//*[@class = "s-checkbox__border"])[3]'))
-            )
-        except:
-            TimeoutException()
+        checkbox = driver.find_element_by_xpath('(//*[@class = "s-checkbox__border"])[3]')
 
         driver.execute_script("window.scrollTo(0,  810)")           #hardcoded
 
@@ -208,19 +135,14 @@ class LessonEdit(unittest.TestCase):
         save.click()
 
         try:
-            warning = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@class = "s-hint s-hint_warning"]'))
-            )
+            warning =  driver.find_element_by_xpath('//*[@class = "s-hint s-hint_warning"]')
 
         except:
             self.fail ("Warning is not displayed")
 
 
         try:
-            error = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@class = "error"]'))
-            )
-
+            error =  driver.find_element_by_xpath('//*[@class = "error"]')
         except:
             self.fail("Error is not displayed")
 
@@ -237,15 +159,9 @@ class LessonEdit(unittest.TestCase):
     def test_no_options(self):
         self.open_lesson_to_edit()
         print("Testing quiz options. No options selected.")
+
         driver = self.driver
-
-        try:
-            checkbox = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '(//*[@class = "s-checkbox__border"])[5]'))
-            )
-
-        except:
-            TimeoutException()
+        checkbox = driver.find_element_by_xpath('(//*[@class = "s-checkbox__border"])[5]')
 
         driver.execute_script("window.scrollTo(0,  810)")           #hardcoded
         checkbox.click()
