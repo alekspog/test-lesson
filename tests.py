@@ -12,7 +12,7 @@ url = "https://stepic.org/lesson/%D0%9A%D0%B0%D0%BA-%D0%B8%D0%B3%D1%80%D0%B0%D1%
 username = "liakhulia@gmail.com"
 password = "512345"
 path_to_chromedriver = "C://chromedriver"
-
+test_text = "Answer below"
 
 class LessonEdit(unittest.TestCase):
 
@@ -45,7 +45,7 @@ class LessonEdit(unittest.TestCase):
         edit = driver.find_element_by_xpath('//*[@class = "lesson-header__buttons"]/a[1]')
         edit.click()
 
-    def restore_lesson(self):
+    def restore_correst_option(self):
         driver = self.driver
 
         driver.execute_script("window.scrollTo(0,  0)")  # hardcoded
@@ -64,7 +64,18 @@ class LessonEdit(unittest.TestCase):
         checkbox2.click()
         save.click()
 
-    def test_correct_answer(self):
+    def restore_textfield(self):
+        driver = self.driver
+        driver.execute_script("window.scrollTo(0,  0)")  # hardcoded
+        edit = driver.find_element_by_xpath('//*[@class = "lesson-header__buttons"]/a[1]')
+        edit.click()
+
+        textfield = driver.find_element_by_xpath('//*[@class="wysihtml5-textarea step-text-wrapper wysi-textarea__body theory"]')
+        for i in range (len(test_text)):
+            textfield.send_keys(Keys.BACK_SPACE)
+
+
+    def te_correct_answer(self):
         self.open_lesson_to_edit()
         print ("Testing correct option")
         driver = self.driver
@@ -99,7 +110,7 @@ class LessonEdit(unittest.TestCase):
         except:
             self.fail("Incorrect answer")
 
-        self.restore_lesson()
+        self.restore_correst_option()
 
     def test_edit_text(self):
         self.open_lesson_to_edit()
@@ -119,7 +130,9 @@ class LessonEdit(unittest.TestCase):
         textfield = driver.find_element_by_xpath('//*[@class="ember-view step-text-wrapper"]')
         assert "below" in textfield.text
 
-    def test_too_many_options(self):
+        self.restore_textfield()
+
+    def tes_too_many_options(self):
         self.open_lesson_to_edit()
         print ("Testing quiz options. Too many options warning.")
         driver = self.driver
@@ -147,16 +160,7 @@ class LessonEdit(unittest.TestCase):
             self.fail("Error is not displayed")
 
 
-        try:
-             WebDriverWait(driver, 10).until(
-                EC.alert_is_present()
-            )
-             alert = driver.switch_to.alert
-             alert.accept()
-        except:
-            print("No alert is present")
-
-    def test_no_options(self):
+    def tes_no_options(self):
         self.open_lesson_to_edit()
         print("Testing quiz options. No options selected.")
 
